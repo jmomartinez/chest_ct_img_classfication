@@ -10,8 +10,8 @@
         409
     ],
     "Channels": 4,
-    "Max Val": "1.0",
-    "Min Val": "0.0",
+    "Max Val": 1,
+    "Min Val": 0,
     "Features dtype": "<class 'numpy.ndarray'>",
     "Features Shape": [
         25,

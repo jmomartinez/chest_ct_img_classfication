@@ -14,11 +14,11 @@ class eda_sda():
         self.batch_size = batch_size
         self.train_it = 0
         self.json_str = 0
-        self.classes = ['adenocarcinoma','large cell carcinoma','normal','squamous cell carcinoma']
+        self.classes = {0:'adenocarcinoma',1:'large cell carcinoma',2:'normal',3:'squamous cell carcinoma'}
 
     def init_generator(self):
         train_gen = ImageDataGenerator()
-        train_generator = train_gen.flow_from_directory(self.folder_path,batch_size=25)
+        train_generator = train_gen.flow_from_directory(self.folder_path,batch_size=25,shuffle=True)
         self.train_it = train_generator
 
     # Statistical Data Analysis
@@ -29,15 +29,11 @@ class eda_sda():
 
         img_info = {'Img Shape':img.shape,'Array Data Type':str(img.dtype),
         'Dimensions':[img_shape[0],img_shape[1]],'Channels':img_shape[2],
-        'Max Val':str(img[0].max()),'Min Val':str(img[0].min())}
+        'Max Val':int(img[0].max()),'Min Val':int(img[0].min())}
 
         # Pixel Stats
         img = Image.open(self.img_path)
         img = np.asarray(img.convert(mode='L'))
-
-        # df = pd.DataFrame(img)
-        # pix_stats = dict(df.describe())
-        # img_info['Pixel Stats'] = pix_stats
 
         # Batch Stats
         features,target = next(self.train_it)
@@ -62,14 +58,24 @@ class eda_sda():
         plt.title('Chest CT({})'.format(self.classes[0]))
         plt.xlabel('pixels')
         plt.ylabel('pixels')
+        plt.savefig('chest_ct({}).png'.format(self.classes[0]))
         plt.show()
+
+
+    def decode(self,target):
+        return np.nonzero(target)[0]
 
     def display_batch(self):
         features,target = next(self.train_it)
 
-        plt.figure(figsize=(12,12))
-        for i in range(9):
-            plt.subplot(3,3,i+1)
+        plt.figure(figsize=(13,13))
+        for i in range(12):
+            plt.subplot(3,4,i+1)
             plt.imshow(features[i].astype('uint8'))
-            plt.suptitle('Chest CTs({})'.format(self.classes[0]),size=20)
+            nonzero_index = int(self.decode(target[i]))
+            plt.title(self.classes[nonzero_index])
+            plt.yticks([])
+            plt.xticks([])
+            plt.suptitle('Chest CTs Sample',size=20)
+            plt.savefig('chest_cts_sample.png')
         plt.show()
