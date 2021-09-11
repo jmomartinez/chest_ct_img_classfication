@@ -41,5 +41,5 @@ class main():
     
 if __name__ == '__main__':
     main_obj = main()
-    # main_obj.data_analysis()
-    main_obj.cnn_model()
+    main_obj.data_analysis()
+    # main_obj.cnn_model()
