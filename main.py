@@ -1,6 +1,7 @@
 from eda_sda import eda_sda
 from model import model
 from pre_process import pre_processing
+
 class main():
 
     def __init__(self):
@@ -8,6 +9,7 @@ class main():
         self.train_path = '../Datasets/chest_cancer_data/train'
         self.valid_path = '../Datasets/chest_cancer_data/valid'
         self.test_path = '../Datasets/chest_cancer_data/test'
+        self.batch_size = 25
 
     # Exploratory & Statistical Data Analysis
     def data_analysis(self):
@@ -19,15 +21,18 @@ class main():
 
     # Model creation, training, & testing
     def cnn_model(self):
-        batch_size,target_size,epochs = 25,(256,380,3)
-        epochs,pool,kernel = 50,(2,2),(3,3)
+        epochs = 50
+        target_size = (256,380)
+        input_shape = (256,380,3)
+        pool,kernel = (2,2),(3,3)
+        train_batch_size,valid_batch_size,test_batch_size = 25,5,15
 
         dpp_obj = pre_processing(self.train_path,self.valid_path,
-        self.test_path,batch_size,target_size)
+        self.test_path,target_size,train_batch_size,valid_batch_size,test_batch_size)
 
         train_gen,valid_gen,test_gen = dpp_obj.init_generators()
-        model_obj = model(epochs,target_size,pool,kernel,
-                train_gen,valid_gen,test_gen,batch_size)
+        model_obj = model(epochs,input_shape,pool,kernel,
+                train_gen,valid_gen,test_gen)
         
         # Train and evaluate
         model_obj.results()
@@ -36,5 +41,5 @@ class main():
     
 if __name__ == '__main__':
     main_obj = main()
-    main_obj.data_analysis()
+    # main_obj.data_analysis()
     main_obj.cnn_model()

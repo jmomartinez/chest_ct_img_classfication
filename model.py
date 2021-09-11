@@ -8,7 +8,7 @@ from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 import matplotlib.pyplot as plt
 
 class model():
-    def __init__(self,epochs,in_shape,pool_size,kernel_size,train_gen,valid_gen,test_gen,batch_size):
+    def __init__(self,epochs,in_shape,pool_size,kernel_size,train_gen,valid_gen,test_gen):
         self.epochs = epochs
         self.shape = in_shape
         self.p_size = pool_size
@@ -16,7 +16,6 @@ class model():
         self.tgen = train_gen
         self.vgen = valid_gen
         self.test_gen = test_gen
-        self.batch_size = batch_size
 
     def create_model(self):
         inp = self.shape
@@ -44,18 +43,19 @@ class model():
     def train_model(self):
         chk_point = ModelCheckpoint('best_weights.hdf5',monitor='val_loss',
                 mode='min',verbose=1,save_best_only=True,save_weights_only=True)
-        early_stopping = EarlyStopping(monitor='val_loss',mode='min',patience=2)
+        early_stopping = EarlyStopping(monitor='val_loss',mode='min',patience=3,verbose=1)
         callbacks=[chk_point,early_stopping]
 
         cnn = self.create_model()
-        trained_model = cnn.fit(self.tgen,epochs=self.epochs,steps_per_epoch=(len(self.tgen)//self.batch_size),
-                validation_data=self.vgen,callbacks=callbacks)
+        print(self.tgen.n)
+        trained_model = cnn.fit(self.tgen,epochs=self.epochs,steps_per_epoch=(self.tgen.n//self.tgen.batch_size),
+                validation_data=self.vgen,validation_steps=(self.vgen.n//self.vgen.batch_size),callbacks=callbacks)
         return trained_model
 
     def final_model(self):
         cnn = self.create_model()
         cnn.load_weights('best_weights.hdf5')
-        _,accuracy = cnn.evaluate(self.test_gen)
+        _,accuracy = cnn.evaluate(self.test_gen,steps=(self.test_gen.n//self.test_gen.batch_size))
         print('Evaluation Accuracy:',accuracy)
 
     def results(self):
