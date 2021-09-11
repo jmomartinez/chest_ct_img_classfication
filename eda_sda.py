@@ -37,11 +37,10 @@ class eda_sda():
 
         # Batch Stats
         features,target = next(self.train_it)
-
         batch_info = {'Features dtype':str(type(features)),'Features Shape':features.shape,
         'Target Shape':target.shape,'Class Indices':self.train_it.class_indices}
         
-        # Batch Stats
+        # Batch Stats > JSON File
         info = {**img_info,**batch_info}
         with open('data_stats.json','w') as write_file:
             json.dump(info,write_file,indent=4)
@@ -66,6 +65,7 @@ class eda_sda():
         return np.nonzero(target)[0]
 
     def display_batch(self):
+        # Data is already scaled to be between 0-1
         features,target = next(self.train_it)
 
         plt.figure(figsize=(13,13))
