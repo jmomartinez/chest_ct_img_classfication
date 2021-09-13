@@ -1,0 +1,32 @@
+{
+    "Img Shape": [
+        264,
+        409,
+        4
+    ],
+    "Array Data Type": "float32",
+    "Dimensions": [
+        264,
+        409
+    ],
+    "Channels": 4,
+    "Max Val": 1,
+    "Min Val": 0,
+    "Features dtype": "<class 'numpy.ndarray'>",
+    "Features Shape": [
+        25,
+        256,
+        256,
+        3
+    ],
+    "Target Shape": [
+        25,
+        4
+    ],
+    "Class Indices": {
+        "adenocarcinoma_left.lower.lobe_T2_N0_M0_Ib": 0,
+        "large.cell.carcinoma_left.hilum_T2_N2_M0_IIIa": 1,
+        "normal": 2,
+        "squamous.cell.carcinoma_left.hilum_T1_N2_M0_IIIa": 3
+    }
+}
