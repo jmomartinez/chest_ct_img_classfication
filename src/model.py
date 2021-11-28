@@ -6,6 +6,7 @@ from tensorflow.keras.layers import Dropout, Conv2D, MaxPool2D, Dense, Flatten
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 import matplotlib.pyplot as plt
+from tensorflow.keras.utils import plot_model
 
 class model():
     def __init__(self,epochs,in_shape,pool_size,kernel_size,train_gen,valid_gen,test_gen):
@@ -36,6 +37,7 @@ class model():
         cnn.add(Dropout(rate=.15)) # Only applied during training (e.g. model.fit())
         cnn.add(Dense(64,activation='relu'))
         cnn.add(Dense(4,activation='softmax'))
+        plot_model(cnn, to_file='train_model.png', show_shapes=True)
 
         cnn.compile(optimizer='adam',loss='categorical_crossentropy',metrics=['accuracy'])
         return cnn
